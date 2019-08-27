@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  *
  * Licensed under a BSD-style License. You can find the license here:
- * https://carte.sourceforge.io/css4j/LICENSE.txt
+ * https://raw.githubusercontent.com/carlosame/uparser/master/LICENSE.txt
  *
  */
 module io.sf.carte.uparser {

@@ -115,7 +115,7 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-javadoc-plugin</artifactId>
-			<version>3.1.0</version>
+			<version>3.1.1</version>
 			<configuration>
 				<source>7</source>
 				<quiet>true</quiet>
@@ -141,18 +141,18 @@
   </build>
   <name>uParser</name>
   <description>Small event parser</description>
-  <url>https://sourceforge.net/projects/uparser.carte.p/</url>
+  <url>https://github.com/carlosame/uparser</url>
   <licenses>
 	<license>
 		<name>BSD 3-clause license</name>
-		<url>https://carte.sourceforge.io/LICENSE.txt</url>
+		<url>https://raw.githubusercontent.com/carlosame/uparser/master/LICENSE.txt</url>
 	</license>
   </licenses>
   <scm>
-  	<connection>scm:git:git://git.code.sf.net/p/carte/uparser</connection>
-	<url>https://sourceforge.net/p/carte/uparser/ci/master/tree/</url>
+	<connection>scm:git:https://github.com/carlosame/uparser.git</connection>
+	<url>https://github.com/carlosame/uparser</url>
   </scm>
   <issueManagement>
-	<url>https://sourceforge.net/p/carte/tickets/</url>
+	<url>https://github.com/carlosame/uparser/issues</url>
   </issueManagement>
 </project>
