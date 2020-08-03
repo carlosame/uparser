@@ -13,6 +13,7 @@ package io.sf.carte.uparser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +88,54 @@ public class TokenProducerTest {
 		assertEquals("list-item", handler.words.get(4));
 		assertEquals("(:)(:)-", handler.punctbuffer.toString());
 		assertEquals(46, handler.lastCharacterIndex);
+	}
+
+	@Test
+	public void testParseReaderSizeLimit() throws IOException {
+		int[] allowInWords = { 33, 60 }; // <!
+		MyTokenHandler handler = new MyTokenHandler();
+		TokenProducer tp = new TokenProducer(handler, allowInWords, 20);
+		try {
+			tp.parse(new StringReader("(display: table-cell) and (display: list-item)"), "<!--", "-->");
+			fail("Must throw exception.");
+		} catch (SecurityException e) {
+		}
+	}
+
+	@Test
+	public void testParseReaderSizeLimitSingleWord() throws IOException {
+		int[] allowInWords = { 33, 60 }; // <!
+		MyTokenHandler handler = new MyTokenHandler();
+		TokenProducer tp = new TokenProducer(handler, allowInWords, 20);
+		try {
+			tp.parse(new StringReader("aaaaaaaaaaaaaaaaaaaaaaaaaaa"), "<!--", "-->");
+			fail("Must throw exception.");
+		} catch (SecurityException e) {
+		}
+	}
+
+	@Test
+	public void testParseReaderSizeLimitComment() throws IOException {
+		int[] allowInWords = { 33, 60 }; // <!
+		MyTokenHandler handler = new MyTokenHandler();
+		TokenProducer tp = new TokenProducer(handler, allowInWords, 20);
+		try {
+			tp.parse(new StringReader("<!ELEMENT> <!-- comment -->"), "<!--", "-->");
+			fail("Must throw exception.");
+		} catch (SecurityException e) {
+		}
+	}
+
+	@Test
+	public void testParseReaderSizeLimitQuoted() throws IOException {
+		int[] allowInWords = { 33, 60 }; // <!
+		MyTokenHandler handler = new MyTokenHandler();
+		TokenProducer tp = new TokenProducer(handler, allowInWords, 20);
+		try {
+			tp.parse(new StringReader("content: 'foo                  bar'"), "<!--", "-->");
+			fail("Must throw exception.");
+		} catch (SecurityException e) {
+		}
 	}
 
 	@Test
@@ -982,14 +1031,20 @@ public class TokenProducerTest {
 		assertEquals(" pre-webkit-kf-list ", handler.comments.get(1));
 		assertEquals(" post-webkit-kfsel-from ", handler.comments.get(2));
 		assertEquals(" post-webkit-kf-list ", handler.comments.get(12));
-		assertEquals(425, handler.lastCharacterIndex);
-		assertEquals(420, handler.lastWordIndex);
-		assertEquals(455, handler.lastCommentIndex);
-		assertEquals(484, handler.lastControlIndex);
 		assertEquals(0, handler.errorCounter);
 		assertEquals(8, handler.control10);
-		if (handler.control13 != 0) {
+		if (handler.control13 == 0) {
+			assertEquals(420, handler.lastCharacterIndex);
+			assertEquals(415, handler.lastWordIndex);
+			assertEquals(449, handler.lastCommentIndex);
+			assertEquals(476, handler.lastControlIndex);
+		} else {
+			// Windows
 			assertEquals(8, handler.control13);
+			assertEquals(425, handler.lastCharacterIndex);
+			assertEquals(420, handler.lastWordIndex);
+			assertEquals(455, handler.lastCommentIndex);
+			assertEquals(484, handler.lastControlIndex);
 		}
 	}
 
